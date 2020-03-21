@@ -1,21 +1,5 @@
 
 I'm just adding some stuff onto the existing repository for ur5 control in unity to allow for python commands to be sent.
 
-UR5 for Unity
-===
-Author: [Long Qian](http://longqian.me/aboutme), [Shuyang Chen](https://www.linkedin.com/in/shuyang-shawn-chen-346ab6109)
-
-Date: 2017-02-16
-
-## Overview
-The model of UR5 robot and a controller is available in this package. In the sample scene, the robot status is configurable via sliders on GUI layer, like [RViz](http://wiki.ros.org/rviz).
-
-Results on Editor:
-![capture](capture_editor.png "Capture in Unity3D Editor")
-
-Results on Android:
-![capture](capture_android.png "Capture in Android devices")
-
-## TODO
-* Fix joint upper and lower limits.
+The original repo can be found [here](https://github.com/qian256/ur5_unity).
 
