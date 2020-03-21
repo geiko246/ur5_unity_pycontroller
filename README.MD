@@ -1,3 +1,6 @@
+
+I'm just adding some stuff onto the existing repository for ur5 control in unity to allow for python commands to be sent.
+
 UR5 for Unity
 ===
 Author: [Long Qian](http://longqian.me/aboutme), [Shuyang Chen](https://www.linkedin.com/in/shuyang-shawn-chen-346ab6109)
