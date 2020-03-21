@@ -10,6 +10,7 @@ using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Text; 
+using System.Text.RegularExpressions;
 
 public class UR5Controller : MonoBehaviour {
 
@@ -20,11 +21,14 @@ public class UR5Controller : MonoBehaviour {
     private float[] lowerLimit = { -180f, -180f, -180f, -180f, -180f, -180f };
 
     private Socket clientSocket;
-    private byte[] inBuffer = new byte[1024];
+    private float[] jointCmds;
+    
 
     // Use this for initialization
     void Start () {
         initializeJoints();
+
+        jointCmds = new float[6];
 	    InitSocket();
 	}
 
@@ -32,11 +36,12 @@ public class UR5Controller : MonoBehaviour {
 
         try {
             string data = null;
-
+            byte[] inBuffer = new byte[1024];
             int numByte = clientSocket.Receive(inBuffer);
 
             data += Encoding.ASCII.GetString(inBuffer, 0, numByte);
-            Debug.Log("Text received -> " + data); 
+            readNumbers(data);
+            //Debug.Log("Recieved: " + data); 
         }
         catch (Exception e) { 
             Debug.Log(e.ToString()); 
@@ -50,27 +55,10 @@ public class UR5Controller : MonoBehaviour {
         for ( int i = 0; i < 6; i ++) {
             Vector3 currentRotation = jointList[i].transform.localEulerAngles;
             //Debug.Log(currentRotation);
-            currentRotation.z = jointValues[i];
+            currentRotation.z = jointCmds[i];
             jointList[i].transform.localEulerAngles = currentRotation;
         }
 	}
-
-    void OnGUI() {
-        int boundary = 20;
-
-#if UNITY_EDITOR
-        int labelHeight = 20;
-        GUI.skin.label.fontSize = GUI.skin.box.fontSize = GUI.skin.button.fontSize = 20;
-#else
-        int labelHeight = 40;
-        GUI.skin.label.fontSize = GUI.skin.box.fontSize = GUI.skin.button.fontSize = 40;
-#endif
-        GUI.skin.label.alignment = TextAnchor.MiddleLeft;
-        for (int i = 0; i < 6; i++) {
-            GUI.Label(new Rect(boundary, boundary + ( i * 2 + 1 ) * labelHeight, labelHeight * 4, labelHeight), "Joint " + i + ": ");
-            jointValues[i] = GUI.HorizontalSlider(new Rect(boundary + labelHeight * 4, boundary + (i * 2 + 1) * labelHeight + labelHeight / 4, labelHeight * 5, labelHeight), jointValues[i], lowerLimit[i], upperLimit[i]);
-        }
-    }
 
 
     // Create the list of GameObjects that represent each joint of the robot
@@ -102,14 +90,13 @@ public class UR5Controller : MonoBehaviour {
     {
         // initialize server
         IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
-        //IPAddress ipAddr = ipHost.AddressList[0];
-        IPAddress ipAddr = IPAddress.Parse("172.16.70.177");
+        IPAddress ipAddr = ipHost.AddressList[1];
+        //IPAddress ipAddr = IPAddress.Parse("172.16.70.177");
         int socket = 11111;
         IPEndPoint localEndPoint = new IPEndPoint(ipAddr, socket);
 
-        Debug.Log(ipAddr.ToString());
-
         Socket listener = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        //listener.Blocking = false;
 
         try {
             listener.Bind(localEndPoint);
@@ -120,6 +107,21 @@ public class UR5Controller : MonoBehaviour {
         catch (Exception e) { 
             Console.WriteLine(e.ToString()); 
         }
+    }
+
+    void readNumbers(string str)
+    {
+        Regex rx = new Regex(@"\d+(?:\.\d+)?");
+        MatchCollection matches = rx.Matches(str);
+
+        int i = 0;
+        Debug.Log(matches.Count);
+        foreach (Match match in matches)
+        {
+            jointCmds[i] = float.Parse(match.Value, System.Globalization.CultureInfo.InvariantCulture);
+            i++;
+        }
+            
     }
 
 }
