@@ -44,7 +44,7 @@ if __name__ == "__main__":
         counter = 0
     
         arm = RobotArm()
-        arm.speed = 1
+        arm.speed = 3
 
         arm.move_joint_to_angle(1, 20)
         arm.move_joint_to_angle(2, 110)
