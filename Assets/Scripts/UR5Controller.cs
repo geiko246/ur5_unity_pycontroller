@@ -30,8 +30,8 @@ public class UR5Controller : MonoBehaviour {
         initializeJoints();
 
         jointCmds = new float[6];
-	    InitSocket();
-	}
+        InitSocket();
+    }
 
     void Update() {
 
