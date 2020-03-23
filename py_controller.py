@@ -8,7 +8,7 @@ class RobotArm:
     
     def __init__(self):
         self.joint_angles = [0,0,0,0,0,0]
-        self.speed = 1
+        self.speed = 3
 
     # joint_num - index of joint to be moved
     # angle - angle to move towards
@@ -44,14 +44,23 @@ if __name__ == "__main__":
         counter = 0
     
         arm = RobotArm()
-        arm.speed = 3
+        arm.speed = 5
 
         arm.move_joint_to_angle(1, 20)
         arm.move_joint_to_angle(2, 110)
         arm.move_joint_to_angle(3, 30)
         
-        for i in range(10):
-            arm.move_joint_to_angle(0, 10)
-            time.sleep(1)
-            arm.move_joint_to_angle(0, 350, True)
-            time.sleep(1)
+        arm.move_joint_to_angle(0, 10)
+        time.sleep(1)
+        arm.move_joint_to_angle(0, 350, True)
+        time.sleep(1)
+
+        arm.move_joint_to_angle(2, 85, True)
+        arm.move_joint_to_angle(1, 35)
+        
+
+        arm.move_joint_to_angle(0, 20)
+        time.sleep(1)
+        arm.move_joint_to_angle(0, 340, True)
+        time.sleep(1)
+        
